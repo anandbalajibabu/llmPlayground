@@ -1,254 +1,264 @@
-# 🤖 LLM Summarization Comparison App (Powered by Groq)
+# 🤖 AI Summarization Platform
 
-A comprehensive web application built with Streamlit that allows users to compare text summarization results from multiple AI language models through Groq's ultra-fast inference platform.
+> **Professional text summarization with dual AI provider support**
 
-## ✨ Features
+A modern, enterprise-grade web application that provides intelligent text summarization using both cloud-based and local AI models. Compare results from multiple AI providers through a sleek, responsive interface.
 
-- **Multi-LLM Support**: Compare summaries from Meta Llama, Mistral AI, and Google models via Groq
-- **Single API Key**: Access multiple LLM providers through one Groq API key
-- **Ultra-Fast Inference**: Groq's optimized hardware delivers lightning-fast results
-- **Interactive Web Interface**: Elegant, sidebar-free Streamlit interface with real-time comparison
-- **Database Integration**: Store and retrieve documents and summarization results
-- **Performance Analytics**: Compare response times, token usage, and efficiency metrics
-- **Historical Tracking**: View trends and historical performance data
-- **Customizable Settings**: Adjust summary length and select specific models
-- **Sample Data**: Pre-loaded with diverse sample documents for immediate testing
+![Platform Features](https://img.shields.io/badge/AI-Dual%20Provider-blue) ![Models](https://img.shields.io/badge/Models-16%20Available-green) ![Interface](https://img.shields.io/badge/UI-Modern%20Glass%20Morphism-purple) ![Setup](https://img.shields.io/badge/Setup-Automated-orange)
 
-## 🛠️ Tech Stack
+## ✨ **Key Features**
 
-- **Frontend**: Streamlit (elegant, sidebar-free design)
-- **Backend**: Python 3.13+
-- **Database**: SQLite with SQLAlchemy ORM
-- **LLM Infrastructure**: Groq API for ultra-fast inference
-- **Available Models**: 
-  - Meta Llama 3 & 3.1 (8B, 70B parameters)
-  - Mistral AI Mixtral 8x7B
-  - Google Gemma 7B & Gemma 2 9B
-- **Visualization**: Plotly
-- **Data Processing**: Pandas
+### 🔄 **Dual Provider System**
+- **☁️ Groq (Cloud)**: Ultra-fast inference with Llama, Mixtral, and Gemma models
+- **🖥️ Ollama (Local)**: Privacy-focused, offline models running on your machine
+- **🔄 Seamless Switching**: Compare results from cloud and local models side-by-side
 
-## 📋 Prerequisites
+### 🎨 **Modern Interface**
+- **Glass Morphism Design**: Professional, translucent UI with backdrop blur effects
+- **Single-Page Layout**: No scrolling needed - everything visible at once
+- **Responsive Design**: Perfect experience on desktop, tablet, and mobile
+- **Real-time Status**: Live indicators for API connections and model availability
 
-- Python 3.9 or higher
-- Groq API key (free tier available)
-  - Sign up at [Groq Console](https://console.groq.com/)
-  - Generate your API key
-  - Access to multiple LLM models with one key!
+### 🔒 **Smart Security**
+- **Masked API Keys**: Environment variables automatically loaded and masked (gsk_****xyz)
+- **User Override**: Click to override environment keys with custom ones
+- **No Data Logging**: Your documents and API keys stay private
 
-## 🚀 Installation
+### 📄 **Document Processing**
+- **PDF Upload**: Drag & drop PDF files for instant text extraction
+- **Sample Documents**: Built-in sample documents for testing
+- **Text Validation**: Smart content validation and error handling
 
-1. **Clone or navigate to the project directory**:
-   ```bash
-   cd llmPlayground
-   ```
+## 🚀 **Quick Start**
 
-2. **Activate the virtual environment** (already created):
-   ```bash
-   source llm_summarizer_env/bin/activate
-   ```
+### **1. Platform Setup**
+```bash
+git clone https://github.com/anandbalajibabu/llmPlayground.git
+cd llmPlayground
+./setup.sh
+```
 
-3. **Set up environment variables**:
-   - Copy the example environment file:
-     ```bash
-     cp env_example.txt .env
-     ```
-   - Edit `.env` and add your API keys:
-     ```bash
-     OPENAI_API_KEY=your_openai_api_key_here
-     ANTHROPIC_API_KEY=your_anthropic_api_key_here
-     GOOGLE_API_KEY=your_google_api_key_here
-     ```
+### **2. Choose Your AI Provider**
 
-4. **Run the setup script**:
-   ```bash
-   python setup_app.py
-   ```
+#### **Option A: Cloud Models (Groq) - Fast & Easy**
+```bash
+# Get free API key from https://console.groq.com/keys
+# Add to .env file or enter in web interface
+echo "GROQ_API_KEY=your_groq_key_here" >> .env
+```
 
-5. **Start the application**:
-   ```bash
-   streamlit run app.py
-   ```
+#### **Option B: Local Models (Ollama) - Private & Free**
+```bash
+# Install Ollama and download models
+./setup_ollama.sh
+```
 
-## 🎯 Usage
+#### **Option C: Both Providers (Recommended)**
+```bash
+# Setup both for maximum flexibility
+./setup_ollama.sh
+echo "GROQ_API_KEY=your_groq_key_here" >> .env
+```
 
-### Getting Started
+### **3. Start Application**
+```bash
+./start_app.sh
+# Open http://localhost:8000
+```
 
-1. **Open your browser** and navigate to `http://localhost:8501`
+## 🎯 **Available AI Models**
 
-2. **Initialize sample data** by clicking the "🔄 Initialize Sample Data" button in the sidebar
+### ☁️ **Groq (Cloud Models)**
+| Model | Provider | Size | Speed | Use Case |
+|-------|----------|------|-------|----------|
+| **Llama 3.1 70B** | Meta | API | ⚡⚡⚡ | Best quality, complex tasks |
+| **Llama 3.1 8B** | Meta | API | ⚡⚡⚡ | Balanced performance |
+| **Mixtral 8x7B** | Mistral AI | API | ⚡⚡ | Excellent reasoning |
+| **Gemma 7B** | Google | API | ⚡⚡⚡ | Fast, efficient |
 
-3. **Select a document** from the dropdown menu in the sidebar
+### 🖥️ **Ollama (Local Models)**
+| Model | Provider | Size | Privacy | Use Case |
+|-------|----------|------|---------|----------|
+| **Llama 3.1 8B** | Meta | 4.7GB | 🔒 100% | General purpose, private |
+| **Mistral 7B** | Mistral AI | 4.1GB | 🔒 100% | Balanced local inference |
+| **Phi-3 Mini** | Microsoft | 2.3GB | 🔒 100% | Lightweight, fast |
+| **CodeLlama 7B** | Meta | 4.8GB | 🔒 100% | Code and technical content |
 
-4. **Choose LLM providers** you want to compare (requires valid API keys)
+## 🏗️ **Architecture**
 
-5. **Adjust summary settings** like maximum length
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Modern Web Interface                     │
+│           (Glass Morphism • Responsive • Real-time)        │
+└─────────────────────┬───────────────────────────────────────┘
+                      │
+┌─────────────────────▼───────────────────────────────────────┐
+│                  FastAPI Backend                           │
+│              (Async • REST API • Validation)               │
+└─────────────────┬───────────────┬───────────────────────────┘
+                  │               │
+        ┌─────────▼─────────┐   ┌─▼────────────────┐
+        │   Groq Provider   │   │  Ollama Provider │
+        │   (Cloud API)     │   │  (Local Server)  │
+        │                   │   │                  │
+        │ • Llama 3.1       │   │ • Llama 3.1      │
+        │ • Mixtral         │   │ • Mistral        │
+        │ • Gemma           │   │ • Phi-3          │
+        └───────────────────┘   └──────────────────┘
+```
 
-6. **Generate summaries** and compare the results!
+## 📁 **Project Structure**
 
-### Main Features
+```
+ai-summarization-platform/
+├── 🚀 Core Application
+│   ├── modern_app.py              # FastAPI backend
+│   ├── llm_providers.py           # Dual provider system
+│   ├── document_processor.py      # PDF processing
+│   └── templates/index.html       # Modern web interface
+├── ⚙️ Setup & Deployment
+│   ├── setup.sh                   # Platform setup
+│   ├── setup_ollama.sh           # Local models setup
+│   ├── run_app.py                # Application launcher
+│   └── requirements.txt          # Python dependencies
+├── 📚 Documentation
+│   ├── README.md                 # This file
+│   ├── SETUP_GUIDE.md           # Detailed setup guide
+│   └── PROJECT_STRUCTURE.md     # Architecture details
+└── 🔧 Configuration
+    ├── .env                      # Environment variables
+    └── env_example.txt          # Environment template
+```
 
-#### 📄 Document Management
-- View pre-loaded sample documents covering various topics
-- Add custom documents through the interface
-- Browse document metadata (category, word count, creation date)
+## 🎨 **User Interface Features**
 
-#### 🧠 LLM Provider Comparison
-- Support for multiple models from each provider:
-  - **OpenAI**: GPT-3.5 Turbo, GPT-4, GPT-4 Turbo
-  - **Anthropic**: Claude 3 Sonnet, Claude 3 Opus, Claude 3 Haiku
-  - **Google**: Gemini Pro, Gemini Pro Vision
+### **Step 1: Configure AI Providers**
+- 🔑 **Groq API Key**: Auto-loaded from environment, masked for security
+- 🖥️ **Ollama Status**: Real-time connection monitoring
+- 🔄 **Model Selection**: Visual grid of available models with cloud/local indicators
 
-#### 📊 Analysis & Visualization
-- **Summary Comparison**: Side-by-side view of generated summaries
-- **Performance Metrics**: Response time and token usage analysis
-- **Efficiency Analysis**: Words per second and cost-effectiveness
-- **Historical Trends**: Track performance over time
+### **Step 2: Upload Document**
+- 📤 **Drag & Drop**: Intuitive PDF upload with visual feedback
+- 📋 **Sample Documents**: Built-in test documents
+- 👁️ **Preview**: Instant document preview and metrics
 
-#### 💾 Data Persistence
-- All summaries are stored in the database
-- Historical results for each document
-- Performance tracking across different sessions
+### **Step 3: Generate & Compare**
+- 🎯 **Model Selection**: Choose multiple models for comparison
+- 📏 **Length Control**: Adjust summary length with slider
+- 📊 **Results**: Side-by-side comparison with performance metrics
 
-## 🔧 Configuration
+## 🛠️ **System Requirements**
 
-### Environment Variables
+### **For Cloud Models (Groq)**
+- ✅ Any computer with internet connection
+- ✅ 2GB RAM minimum
+- ✅ Modern web browser
+- ✅ Groq API key (free tier available)
 
-Create a `.env` file with the following variables:
+### **For Local Models (Ollama)**
+- 💾 **Minimum**: 8GB RAM, 20GB storage
+- 🚀 **Recommended**: 16GB RAM, 50GB storage, SSD
+- ⚡ **Optimal**: 32GB RAM, GPU with 8GB VRAM
+
+## 🔧 **Environment Variables**
 
 ```bash
-# LLM API Keys
-OPENAI_API_KEY=your_openai_api_key_here
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
-GOOGLE_API_KEY=your_google_api_key_here
+# Cloud Provider (Optional)
+GROQ_API_KEY=your_groq_api_key_here
 
-# Database Configuration
-DATABASE_URL=sqlite:///./app_database.db
+# Local Provider (Optional)
+OLLAMA_BASE_URL=http://localhost:11434
 
 # Application Settings
-APP_NAME=LLM Summarization App
-DEBUG=True
+APP_NAME=AI Summarization Platform
+HOST=0.0.0.0
+PORT=8000
+DEBUG=False
 ```
 
-### API Key Setup
+## 📊 **Performance Comparison**
 
-#### OpenAI
-1. Visit [OpenAI Platform](https://platform.openai.com/api-keys)
-2. Create a new API key
-3. Add it to your `.env` file
+| Aspect | Groq (Cloud) | Ollama (Local) |
+|--------|--------------|----------------|
+| **Speed** | ⚡⚡⚡ Ultra-fast (2-5s) | ⚡ Moderate (10-30s) |
+| **Privacy** | ⚠️ API calls to cloud | ✅ 100% local/private |
+| **Cost** | 💰 Pay per use (free tier) | 🆓 Free after setup |
+| **Setup** | 🎯 API key only | 🔧 Local installation |
+| **Internet** | 📡 Required | ❌ Offline capable |
+| **Models** | 🚀 Latest, curated | 🏠 Full control |
 
-#### Anthropic
-1. Visit [Anthropic Console](https://console.anthropic.com/)
-2. Generate an API key
-3. Add it to your `.env` file
+## 🚀 **Deployment Options**
 
-#### Google AI
-1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Create an API key
-3. Add it to your `.env` file
-
-## 📁 Project Structure
-
-```
-llmPlayground/
-├── app.py                 # Main Streamlit application
-├── database.py            # Database models and management
-├── llm_providers.py       # LLM provider integrations
-├── setup_app.py           # Setup and initialization script
-├── requirements.txt       # Python dependencies
-├── .env                   # Environment variables (create this)
-├── env_example.txt        # Environment variables template
-├── README.md              # This file
-├── llm_summarizer_env/    # Virtual environment
-└── app_database.db        # SQLite database (created automatically)
+### **Local Development**
+```bash
+./start_app.sh
+# Access: http://localhost:8000
 ```
 
-## 🔍 API Usage Examples
-
-The application provides a clean interface, but you can also use the underlying components programmatically:
-
-```python
-from database import DatabaseManager
-from llm_providers import LLMManager
-
-# Initialize managers
-db = DatabaseManager()
-llm = LLMManager()
-
-# Get available providers
-providers = llm.get_available_providers()
-print(f"Available providers: {providers}")
-
-# Generate a summary
-text = "Your text to summarize here..."
-result = llm.generate_summary("OpenAI - GPT-3.5 Turbo", text, max_length=150)
-print(f"Summary: {result['summary']}")
+### **Production Server**
+```bash
+# With environment variables
+export GROQ_API_KEY="your_key"
+export HOST="0.0.0.0"
+export PORT="8000"
+python modern_app.py
 ```
 
-## 🛠️ Troubleshooting
+### **Docker Deployment**
+```bash
+# Build and run (Dockerfile not included, but easily adaptable)
+docker build -t ai-summarization-platform .
+docker run -p 8000:8000 -e GROQ_API_KEY="your_key" ai-summarization-platform
+```
 
-### Common Issues
+## 🔍 **API Endpoints**
 
-1. **"No LLM providers available"**
-   - Check that your API keys are correctly set in the `.env` file
-   - Ensure the `.env` file is in the project root directory
-   - Verify your API keys are valid and have sufficient credits
+### **Web Interface**
+- `GET /` - Main application interface
 
-2. **"No documents found"**
-   - Click the "🔄 Initialize Sample Data" button in the sidebar
-   - Or add a custom document using the interface
+### **API Endpoints**
+- `POST /api/configure-key` - Configure Groq API key
+- `GET /api/models` - List available models
+- `GET /api/groq-status` - Check Groq connection
+- `GET /api/ollama-status` - Check Ollama status
+- `POST /api/process-pdf` - Upload and process PDF
+- `POST /api/summarize` - Generate summaries
+- `GET /api/sample-documents` - Get sample documents
 
-3. **Database errors**
-   - Delete `app_database.db` and run `python setup_app.py` again
-   - Check file permissions in the project directory
+## 🤝 **Contributing**
 
-4. **Import errors**
-   - Make sure the virtual environment is activated
-   - Reinstall dependencies: `pip install -r requirements.txt`
+1. **Fork** the repository
+2. **Create** feature branch (`git checkout -b feature/amazing-feature`)
+3. **Commit** changes (`git commit -m 'Add amazing feature'`)
+4. **Push** to branch (`git push origin feature/amazing-feature`)
+5. **Open** Pull Request
 
-### Performance Tips
+## 📄 **License**
 
-- Start with shorter documents for faster response times
-- Use GPT-3.5 for quicker results during testing
-- Limit the number of providers when comparing many documents
+This project is open source and available under the [MIT License](LICENSE).
 
-## 🤝 Contributing
+## 🆘 **Support & Documentation**
 
-This is a demonstration project. To extend it:
+- 📖 **Setup Guide**: [SETUP_GUIDE.md](SETUP_GUIDE.md)
+- 🏗️ **Architecture**: [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/anandbalajibabu/llmPlayground/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/anandbalajibabu/llmPlayground/discussions)
 
-1. Add new LLM providers by implementing the `LLMProvider` interface
-2. Enhance the UI with additional Streamlit components
-3. Add more analysis features and visualizations
-4. Implement export functionality for results
+## 🎯 **Roadmap**
 
-## 📄 License
-
-This project is for educational and demonstration purposes.
-
-## 🙋‍♂️ Support
-
-If you encounter issues:
-
-1. Check the troubleshooting section above
-2. Verify your API keys and environment setup
-3. Run `python setup_app.py` to diagnose common problems
+- [ ] **More Providers**: Add support for OpenAI, Anthropic, Google AI
+- [ ] **Document Types**: Support for Word, PowerPoint, text files
+- [ ] **Batch Processing**: Multiple document processing
+- [ ] **Export Options**: PDF, Word, JSON export
+- [ ] **API Authentication**: User accounts and API keys
+- [ ] **Performance Analytics**: Detailed model comparison metrics
 
 ---
 
-## 🎉 Quick Start Summary
+<div align="center">
 
-```bash
-# 1. Activate virtual environment
-source llm_summarizer_env/bin/activate
+**🚀 Built with FastAPI • ⚡ Powered by Groq & Ollama • 🎨 Modern Design**
 
-# 2. Set up your API keys in .env file
-cp env_example.txt .env
-# Edit .env with your API keys
+[⭐ Star this repo](https://github.com/anandbalajibabu/llmPlayground) • [🐛 Report Issues](https://github.com/anandbalajibabu/llmPlayground/issues) • [💬 Discussions](https://github.com/anandbalajibabu/llmPlayground/discussions)
 
-# 3. Initialize the application
-python setup_app.py
-
-# 4. Run the app
-streamlit run app.py
-```
-
-Visit `http://localhost:8501` and start comparing LLM summaries! 🚀
+</div>
