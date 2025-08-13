@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Summarization Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-500: #64748b;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 25%, #475569 75%, #64748b 100%);
+            height: 100vh;
+            color: var(--gray-800);
+            line-height: 1.4;
+            overflow: hidden;
+        }
+
+        .app-container {
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 0;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 1.4rem;
+            font-weight: 300;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #fff 0%, #e2e8f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.1rem;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.75rem;
+            font-weight: 300;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 1rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .steps-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            height: 100%;
+        }
+
+        .step-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 1rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .step-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .step-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-shrink: 0;
+        }
+
+        .step-number {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .file-upload {
+            border: 2px dashed var(--gray-300);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: rgba(248, 250, 252, 0.5);
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .file-upload.dragover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+            transform: scale(1.02);
+        }
+
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .model-card {
+            background: rgba(248, 250, 252, 0.8);
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            text-align: center;
+        }
+
+        .model-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .model-card.selected {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .model-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.7rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 8px;
+            padding: 0.75rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .summary-meta {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 0.7rem;
+            color: var(--gray-500);
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            background: var(--gray-100);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            box-shadow: var(--shadow);
+            max-height: 150px;
+        }
+
+        /* Tab styles removed - now using single line layout */
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .steps-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .step-card {
+                max-height: 300px;
+            }
+            
+            .model-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <h1>AI SUMMARIZATION PLATFORM</h1>
+            <p>Professional model comparison interface</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Step 1: API Configuration -->
+            <div class="step-card" id="step1">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h2 class="step-title">Configure AI Providers</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">🔑 Groq API Key (Cloud Models)</label>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="password" class="form-input" id="apiKey" placeholder="gsk_..." style="flex: 1;">
+                        <a href="https://console.groq.com/keys" target="_blank" class="btn btn-secondary">
+                            <i class="fas fa-external-link-alt"></i>
+                            Get Key
+                        </a>
+                    </div>
+                    <div id="envKeyStatus" style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--gray-500);"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">🖥️ Ollama Status (Local Models)</label>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <div id="ollamaStatus" style="flex: 1; padding: 0.5rem; background: var(--gray-100); border-radius: 8px; font-size: 0.8rem;">
+                            <span style="color: var(--gray-500);">Checking...</span>
+                        </div>
+                        <button class="btn btn-secondary" onclick="checkOllamaStatus()">
+                            <i class="fas fa-sync"></i>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="apiStatus"></div>
+                <div id="modelsList" class="hidden">
+                    <label class="form-label">Available Models:</label>
+                    <div class="model-grid" id="modelsGrid"></div>
+                </div>
+            </div>
+
+            <!-- Step 2: Document Upload -->
+            <div class="step-card" id="step2">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <h2 class="step-title">Upload Document</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">📄 Document Source</label>
+                    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+                        <div class="file-upload" id="fileUpload" style="flex: 1; padding: 0.5rem; min-height: auto;">
+                            <i class="fas fa-upload" style="margin-right: 0.5rem;"></i>
+                            <span style="font-size: 0.8rem;">Upload PDF</span>
+                            <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+                        </div>
+                        <span style="color: var(--gray-400); font-size: 0.8rem;">OR</span>
+                        <select class="form-input" id="sampleSelect" style="flex: 1;">
+                            <option value="">Select sample...</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="loadSample()">
+                            <i class="fas fa-download"></i>
+                            Load
+                        </button>
+                    </div>
+                </div>
+
+                <div id="documentInfo" class="hidden"></div>
+                <div id="documentPreview" class="hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <label class="form-label" style="margin-bottom: 0;">Preview:</label>
+                        <button class="btn btn-secondary" onclick="clearDocument()">
+                            <i class="fas fa-trash"></i>
+                            Clear
+                        </button>
+                    </div>
+                    <div style="background: var(--gray-100); padding: 0.75rem; border-radius: 8px; max-height: 100px; overflow-y: auto; font-family: monospace; line-height: 1.2; font-size: 0.75rem;"></div>
+                </div>
+            </div>
+
+            <!-- Step 3: Generate Summaries -->
+            <div class="step-card" id="step3">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <h2 class="step-title">Generate Summaries</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Selected Models</label>
+                    <div id="selectedModels" style="min-height: 40px; padding: 0.5rem; background: var(--gray-100); border-radius: 8px; font-size: 0.8rem;">
+                        <span style="color: var(--gray-500);">Select models from Step 1</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Length: <span id="lengthValue">150</span> words</label>
+                    <input type="range" id="summaryLength" min="50" max="300" value="150" class="form-input">
+                </div>
+
+                <button class="btn btn-primary" id="generateBtn" onclick="generateSummaries()" disabled>
+                    <i class="fas fa-magic"></i>
+                    Generate
+                </button>
+
+                <div class="loading" id="loadingIndicator">
+                    <div class="spinner"></div>
+                    <span>Generating summaries...</span>
+                </div>
+
+                <div class="progress-bar hidden" id="progressBar">
+                    <div class="progress-fill"></div>
+                </div>
+
+                <div id="results" class="hidden">
+                    <label class="form-label">📊 Results</label>
+                    <div class="summary-grid" id="summaryGrid"></div>
+                    
+                    <div class="chart-container" id="chartContainer">
+                        <label class="form-label">Performance</label>
+                        <canvas id="performanceChart" width="400" height="120"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let currentDocument = null;
+        let selectedModels = new Set();
+        let availableModels = [];
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSampleDocuments();
+            setupEventListeners();
+            checkGroqStatus();
+            checkOllamaStatus();
+        });
+
+        function setupEventListeners() {
+            // API key input
+            const apiKeyInput = document.getElementById('apiKey');
+            
+            // Handle user typing (override environment key)
+            apiKeyInput.addEventListener('input', function() {
+                const currentValue = this.value;
+                const statusDiv = document.getElementById('envKeyStatus');
+                
+                // If user starts typing and it's not the masked value, they're overriding
+                if (currentValue && !currentValue.includes('*')) {
+                    statusDiv.innerHTML = `
+                        <span style="color: var(--primary);">✏️ Using custom API key</span>
+                        <span style="color: var(--gray-400); margin-left: 0.5rem;">Overriding environment key</span>
+                    `;
+                }
+                
+                // Debounced API configuration
+                debounce(configureAPI, 500)();
+            });
+            
+            // Handle focus - clear placeholder if it's a masked key
+            apiKeyInput.addEventListener('focus', function() {
+                if (this.value.includes('*')) {
+                    this.value = '';
+                    this.placeholder = 'Enter your Groq API key...';
+                }
+            });
+            
+            // File upload
+            const fileUpload = document.getElementById('fileUpload');
+            const fileInput = document.getElementById('fileInput');
+            
+            fileUpload.addEventListener('click', () => fileInput.click());
+            fileUpload.addEventListener('dragover', handleDragOver);
+            fileUpload.addEventListener('drop', handleDrop);
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // Summary length slider
+            document.getElementById('summaryLength').addEventListener('input', function() {
+                document.getElementById('lengthValue').textContent = this.value;
+            });
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        async function configureAPI(skipUIUpdate = false) {
+            const apiKeyInput = document.getElementById('apiKey');
+            const apiKey = apiKeyInput.value.trim();
+            if (!apiKey) return;
+
+            // Determine which key to use
+            let keyToSend = apiKey;
+            
+            // If this is a masked key, use special marker for backend
+            if (apiKey.includes('*')) {
+                keyToSend = 'use_env_key';
+            }
+
+            try {
+                const response = await fetch('/api/configure-key', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ api_key: keyToSend })
+                });
+                
+                const result = await response.json();
+                
+                if (!skipUIUpdate) {
+                    const statusDiv = document.getElementById('apiStatus');
+                    if (result.success) {
+                        statusDiv.innerHTML = `<div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i>
+                            ${result.message}
+                        </div>`;
+                        
+                        availableModels = result.models;
+                        displayModels(result.models);
+                        document.getElementById('modelsList').classList.remove('hidden');
+                    } else {
+                        statusDiv.innerHTML = `<div class="alert alert-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            ${result.message}
+                        </div>`;
+                        document.getElementById('modelsList').classList.add('hidden');
+                    }
+                } else {
+                    // Silent configuration for environment key
+                    if (result.success) {
+                        availableModels = result.models;
+                        displayModels(result.models);
+                        document.getElementById('modelsList').classList.remove('hidden');
+                    }
+                }
+            } catch (error) {
+                console.error('Error configuring API:', error);
+            }
+        }
+
+        function displayModels(models) {
+            const grid = document.getElementById('modelsGrid');
+            grid.innerHTML = '';
+            
+            models.forEach(model => {
+                const card = document.createElement('div');
+                card.className = 'model-card';
+                card.onclick = () => toggleModel(model, card);
+                
+                const displayName = model.split(' - ')[1] || model;
+                const provider = model.split(' - ')[0] || 'Unknown';
+                
+                // Add icon based on provider type
+                const isOllama = provider.includes('Ollama');
+                const icon = isOllama ? '🖥️' : '☁️';
+                const typeLabel = isOllama ? 'Local' : 'Cloud';
+                
+                card.innerHTML = `
+                    <div style="font-size: 0.75rem; font-weight: 600; color: var(--gray-800); margin-bottom: 0.25rem;">
+                        ${icon} ${displayName}
+                    </div>
+                    <div style="color: var(--gray-500); font-size: 0.65rem;">${typeLabel}</div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        async function checkOllamaStatus() {
+            const statusDiv = document.getElementById('ollamaStatus');
+            
+            try {
+                statusDiv.innerHTML = '<span style="color: var(--gray-500);">Checking...</span>';
+                
+                const response = await fetch('/api/ollama-status');
+                const status = await response.json();
+                
+                if (status.available) {
+                    statusDiv.innerHTML = `
+                        <span style="color: var(--success); font-weight: 600;">✅ Online</span>
+                        <span style="color: var(--gray-500); margin-left: 0.5rem;">${status.model_count} models</span>
+                    `;
+                    
+                    // Refresh the model list to include Ollama models
+                    await refreshModelList();
+                } else {
+                    statusDiv.innerHTML = `
+                        <span style="color: var(--warning); font-weight: 600;">⚠️ Offline</span>
+                        <span style="color: var(--gray-500); margin-left: 0.5rem;">Install Ollama for local models</span>
+                    `;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <span style="color: var(--error); font-weight: 600;">❌ Error</span>
+                    <span style="color: var(--gray-500); margin-left: 0.5rem;">Cannot connect</span>
+                `;
+            }
+        }
+
+        async function checkGroqStatus() {
+            const statusDiv = document.getElementById('envKeyStatus');
+            const apiKeyInput = document.getElementById('apiKey');
+            
+            try {
+                const response = await fetch('/api/groq-status');
+                const status = await response.json();
+                
+                if (status.has_env_key) {
+                    // Show masked key and populate input field
+                    apiKeyInput.placeholder = status.masked_key;
+                    apiKeyInput.value = status.masked_key;
+                    
+                    statusDiv.innerHTML = `
+                        <span style="color: var(--success);">🔧 Environment API key loaded</span>
+                        <span style="color: var(--gray-400); margin-left: 0.5rem;">You can override by typing a new key</span>
+                    `;
+                    
+                    // Automatically configure API with environment key
+                    const actualKey = await getActualEnvKey();
+                    if (actualKey) {
+                        await configureAPI(true); // Skip UI update to avoid overwriting masked display
+                    }
+                } else {
+                    statusDiv.innerHTML = `
+                        <span style="color: var(--gray-500);">💡 No environment key found - enter your Groq API key above</span>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error checking Groq status:', error);
+                statusDiv.innerHTML = `
+                    <span style="color: var(--warning);">⚠️ Could not check environment key status</span>
+                `;
+            }
+        }
+
+        async function getActualEnvKey() {
+            // When we have a masked key in the input, we need to use the actual env key for API calls
+            const apiKeyInput = document.getElementById('apiKey');
+            const currentValue = apiKeyInput.value;
+            
+            // Check if the current value is a masked key (contains asterisks)
+            if (currentValue.includes('*')) {
+                // This is a masked key, we need to get the real one from environment
+                // For security, we'll let the backend handle this
+                return 'use_env_key'; // Special marker for backend to use env key
+            }
+            
+            return currentValue;
+        }
+
+        async function refreshModelList() {
+            try {
+                const response = await fetch('/api/models');
+                const result = await response.json();
+                
+                availableModels = result.available;
+                displayModels(result.enabled);
+                
+                if (result.enabled.length > 0) {
+                    document.getElementById('modelsList').classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error refreshing models:', error);
+            }
+        }
+
+        function toggleModel(model, card) {
+            if (selectedModels.has(model)) {
+                selectedModels.delete(model);
+                card.classList.remove('selected');
+            } else {
+                selectedModels.add(model);
+                card.classList.add('selected');
+            }
+            updateSelectedModels();
+        }
+
+        function updateSelectedModels() {
+            const container = document.getElementById('selectedModels');
+            const generateBtn = document.getElementById('generateBtn');
+            
+            if (selectedModels.size === 0) {
+                container.innerHTML = '<span style="color: var(--gray-500);">Select models from Step 1</span>';
+                generateBtn.disabled = true;
+            } else {
+                const modelList = Array.from(selectedModels).map(model => {
+                    const displayName = model.split(' - ')[1] || model;
+                    return `<span style="background: var(--primary); color: white; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.7rem; margin: 0.25rem; display: inline-block;">${displayName}</span>`;
+                }).join('');
+                
+                container.innerHTML = modelList;
+                generateBtn.disabled = !currentDocument;
+            }
+        }
+
+        // Tab switching functionality removed - now using single line layout
+
+        async function loadSampleDocuments() {
+            try {
+                const response = await fetch('/api/sample-documents');
+                const samples = await response.json();
+                
+                const select = document.getElementById('sampleSelect');
+                Object.keys(samples).forEach(title => {
+                    const option = document.createElement('option');
+                    option.value = title;
+                    option.textContent = title;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading samples:', error);
+            }
+        }
+
+        async function loadSample() {
+            const title = document.getElementById('sampleSelect').value;
+            if (!title) return;
+            
+            try {
+                const response = await fetch('/api/sample-documents');
+                const samples = await response.json();
+                
+                currentDocument = {
+                    title: title,
+                    text: samples[title],
+                    metadata: {
+                        filename: title,
+                        word_count: samples[title].split(' ').length,
+                        char_count: samples[title].length
+                    }
+                };
+                
+                displayDocumentInfo();
+            } catch (error) {
+                console.error('Error loading sample:', error);
+            }
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                processFile(files[0]);
+            }
+        }
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                processFile(file);
+            }
+        }
+
+        async function processFile(file) {
+            if (!file.name.toLowerCase().endsWith('.pdf')) {
+                showAlert('Only PDF files are supported', 'error');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch('/api/process-pdf', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentDocument = {
+                        title: result.metadata.filename,
+                        text: result.text,
+                        metadata: result.metadata
+                    };
+                    
+                    displayDocumentInfo();
+                    showAlert('PDF processed successfully!', 'success');
+                } else {
+                    showAlert(result.error, 'error');
+                }
+            } catch (error) {
+                showAlert('Error processing PDF: ' + error.message, 'error');
+            }
+        }
+
+        function displayDocumentInfo() {
+            const infoDiv = document.getElementById('documentInfo');
+            const previewDiv = document.getElementById('documentPreview');
+            
+            infoDiv.innerHTML = `
+                <div class="alert alert-success" style="margin-top: 2rem;">
+                    <i class="fas fa-file-pdf"></i>
+                    <strong>${currentDocument.title}</strong> - 
+                    ${currentDocument.metadata.word_count.toLocaleString()} words, 
+                    ${currentDocument.metadata.char_count.toLocaleString()} characters
+                </div>
+            `;
+            
+            const preview = currentDocument.text.substring(0, 500) + '...';
+            previewDiv.querySelector('div').textContent = preview;
+            
+            infoDiv.classList.remove('hidden');
+            previewDiv.classList.remove('hidden');
+            
+            updateSelectedModels(); // Update generate button state
+        }
+
+        async function generateSummaries() {
+            if (!currentDocument || selectedModels.size === 0) return;
+            
+            const loadingDiv = document.getElementById('loadingIndicator');
+            const generateBtn = document.getElementById('generateBtn');
+            const progressBar = document.getElementById('progressBar');
+            
+            loadingDiv.style.display = 'flex';
+            generateBtn.disabled = true;
+            progressBar.classList.remove('hidden');
+            
+            try {
+                const response = await fetch('/api/summarize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: currentDocument.text,
+                        models: Array.from(selectedModels),
+                        max_length: parseInt(document.getElementById('summaryLength').value)
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayResults(result.results, result.stats);
+                    showAlert(`Generated ${result.stats.successful} summaries successfully!`, 'success');
+                } else {
+                    showAlert(result.error, 'error');
+                }
+            } catch (error) {
+                showAlert('Error generating summaries: ' + error.message, 'error');
+            } finally {
+                loadingDiv.style.display = 'none';
+                generateBtn.disabled = false;
+                progressBar.classList.add('hidden');
+            }
+        }
+
+        function displayResults(results, stats) {
+            const summaryGrid = document.getElementById('summaryGrid');
+            const resultsDiv = document.getElementById('results');
+            
+            summaryGrid.innerHTML = '';
+            
+            results.forEach(result => {
+                const card = document.createElement('div');
+                card.className = 'summary-card fade-in';
+                
+                const displayName = result.model.split(' - ')[1] || result.model;
+                
+                if (result.success) {
+                    card.innerHTML = `
+                        <div class="summary-header">
+                            <div style="font-size: 0.9rem; font-weight: 600; color: var(--gray-800);">${displayName}</div>
+                            <div class="summary-meta">
+                                <span class="meta-item">${result.response_time.toFixed(2)}s</span>
+                                <span class="meta-item">${result.summary.split(' ').length}w</span>
+                                <span class="meta-item">${result.token_count || 'N/A'}t</span>
+                            </div>
+                        </div>
+                        <div style="line-height: 1.4; color: var(--gray-700); font-size: 0.8rem;">
+                            ${result.summary}
+                        </div>
+                    `;
+                } else {
+                    card.innerHTML = `
+                        <div class="summary-header">
+                            <div style="font-size: 0.9rem; font-weight: 600; color: var(--error);">${displayName}</div>
+                            <span style="color: var(--error); font-size: 0.75rem;">❌ Failed</span>
+                        </div>
+                        <div style="color: var(--error); font-size: 0.75rem;">
+                            ${result.error}
+                        </div>
+                    `;
+                }
+                
+                summaryGrid.appendChild(card);
+            });
+            
+            // Create performance chart
+            createPerformanceChart(results.filter(r => r.success));
+            
+            resultsDiv.classList.remove('hidden');
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function createPerformanceChart(results) {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            const labels = results.map(r => r.model.split(' - ')[1] || r.model);
+            const responseTimes = results.map(r => r.response_time);
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Response Time (seconds)',
+                        data: responseTimes,
+                        backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Response Time (seconds)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function clearDocument() {
+            currentDocument = null;
+            document.getElementById('documentInfo').classList.add('hidden');
+            document.getElementById('documentPreview').classList.add('hidden');
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('fileInput').value = '';
+            document.getElementById('sampleSelect').value = '';
+            updateSelectedModels();
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} fade-in`;
+            alertDiv.style.fontSize = '0.8rem';
+            alertDiv.style.padding = '0.5rem';
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+            `;
+            
+            document.querySelector('.main-content').insertBefore(alertDiv, document.querySelector('.main-content').firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
