@@ -11,9 +11,10 @@ from typing import List, Optional
 import json
 import asyncio
 import time
+import os
 
-from document_processor import DocumentProcessor
-from llm_providers import DualLLMManager
+from src.core.document_processor import DocumentProcessor
+from src.core.providers import DualLLMManager
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -23,7 +24,7 @@ app = FastAPI(
 )
 
 # Mount templates only (no static files needed - using inline CSS/JS)
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="src/ui/templates")
 
 # Global LLM manager with dual provider support
 # Initialize with environment API key if available

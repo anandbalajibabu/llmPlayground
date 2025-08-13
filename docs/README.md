@@ -35,16 +35,23 @@ A modern, enterprise-grade web application that provides intelligent text summar
 ```bash
 git clone https://github.com/anandbalajibabu/llmPlayground.git
 cd llmPlayground
-./setup.sh
+./scripts/setup.sh
 ```
+
+**📁 Important:** Configuration files are now organized in the `config/` directory:
+- `config/requirements.txt` - Python dependencies  
+- `config/env_example.txt` - Environment template
 
 ### **2. Choose Your AI Provider**
 
 #### **Option A: Cloud Models (Groq) - Fast & Easy**
 ```bash
-# Get free API key from https://console.groq.com/keys
-# Add to .env file or enter in web interface
-echo "GROQ_API_KEY=your_groq_key_here" >> .env
+# 1. Get free API key from https://console.groq.com/keys
+# 2. Create .env file from template
+cp config/env_example.txt .env
+# 3. Add your API key to .env file
+echo "GROQ_API_KEY=your_actual_groq_key_here" >> .env
+# OR edit .env manually with your preferred editor
 ```
 
 #### **Option B: Local Models (Ollama) - Private & Free**
@@ -55,14 +62,17 @@ echo "GROQ_API_KEY=your_groq_key_here" >> .env
 
 #### **Option C: Both Providers (Recommended)**
 ```bash
-# Setup both for maximum flexibility
+# 1. Setup local models
 ./setup_ollama.sh
-echo "GROQ_API_KEY=your_groq_key_here" >> .env
+# 2. Create .env file from template
+cp config/env_example.txt .env
+# 3. Add your Groq API key
+echo "GROQ_API_KEY=your_actual_groq_key_here" >> .env
 ```
 
 ### **3. Start Application**
 ```bash
-./start_app.sh
+./scripts/start.sh
 # Open http://localhost:8000
 ```
 

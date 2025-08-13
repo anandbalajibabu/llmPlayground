@@ -75,30 +75,30 @@ check_pip() {
 create_venv() {
     print_status "Creating virtual environment..."
     
-    if [ -d "ai_summarizer_env" ]; then
+    if [ -d "llm_summarizer_env" ]; then
         print_warning "Virtual environment already exists. Removing old one..."
-        rm -rf ai_summarizer_env
+        rm -rf llm_summarizer_env
     fi
     
-    python3 -m venv ai_summarizer_env
-    print_success "Virtual environment created: ai_summarizer_env"
+    python3 -m venv llm_summarizer_env
+    print_success "Virtual environment created: llm_summarizer_env"
 }
 
 # Activate virtual environment and install dependencies
 install_dependencies() {
     print_status "Activating virtual environment and installing dependencies..."
     
-    source ai_summarizer_env/bin/activate
+    source llm_summarizer_env/bin/activate
     
     # Upgrade pip first
     pip install --upgrade pip
     
     # Install dependencies
-    if [ -f "requirements.txt" ]; then
-        pip install -r requirements.txt
+    if [ -f "config/requirements.txt" ]; then
+        pip install -r config/requirements.txt
         print_success "Dependencies installed successfully"
     else
-        print_error "requirements.txt not found!"
+        print_error "config/requirements.txt not found!"
         exit 1
     fi
 }
@@ -108,7 +108,7 @@ create_env_file() {
     print_status "Creating environment configuration..."
     
     if [ ! -f ".env" ]; then
-        cp env_example.txt .env
+        cp config/env_example.txt .env
         print_success "Environment file created: .env"
         print_warning "Please edit .env file to add your Groq API key"
     else
@@ -143,7 +143,7 @@ fi
 
 # Activate virtual environment
 echo -e "${BLUE}[INFO]${NC} Activating virtual environment..."
-source ai_summarizer_env/bin/activate
+source llm_summarizer_env/bin/activate
 
 # Start the application
 echo -e "${BLUE}[INFO]${NC} Starting AI Summarization Platform..."
@@ -151,7 +151,7 @@ echo -e "${GREEN}[SUCCESS]${NC} Application will be available at: http://localho
 echo -e "${BLUE}[INFO]${NC} Press Ctrl+C to stop the application"
 echo ""
 
-python modern_app.py
+python main.py
 EOF
 
     chmod +x start_app.sh
@@ -162,7 +162,7 @@ EOF
 test_installation() {
     print_status "Testing installation..."
     
-    source ai_summarizer_env/bin/activate
+    source llm_summarizer_env/bin/activate
     
     # Test imports
     python3 -c "

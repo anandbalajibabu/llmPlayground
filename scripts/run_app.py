@@ -114,7 +114,7 @@ def check_environment_file():
         print_status("Creating .env from template...")
         
         # Create .env from template if it exists
-        env_example = Path("env_example.txt")
+        env_example = Path("config/env_example.txt")
         if env_example.exists():
             try:
                 with open(env_example, 'r') as src, open('.env', 'w') as dst:
@@ -126,7 +126,7 @@ def check_environment_file():
                 print_error(f"Failed to create .env file: {e}")
                 return False
         else:
-            print_warning("No env_example.txt found - continuing without .env")
+            print_warning("No config/env_example.txt found - continuing without .env")
             return True
 
 def get_available_port():
@@ -159,9 +159,9 @@ def start_application(venv_path, port=8000):
         python_exe = venv_path / "bin" / "python"
     
     # Check if main app file exists
-    app_file = Path("modern_app.py")
+    app_file = Path("main.py")
     if not app_file.exists():
-        print_error("Main application file (modern_app.py) not found!")
+        print_error("Main application file (main.py) not found!")
         return False
     
     try:
@@ -169,8 +169,8 @@ def start_application(venv_path, port=8000):
         print_status("Press Ctrl+C to stop the application")
         print("")
         
-        # Start the application
-        subprocess.run([str(python_exe), "modern_app.py"], check=True)
+        # Start the application with the correct port
+        subprocess.run([str(python_exe), "main.py", "--port", str(port)], check=True)
         
     except KeyboardInterrupt:
         print_status("\nApplication stopped by user")
@@ -186,9 +186,10 @@ def main():
     """Main launcher function"""
     print_header()
     
-    # Change to script directory
+    # Change to project root directory (parent of scripts directory)
     script_dir = Path(__file__).parent
-    os.chdir(script_dir)
+    project_root = script_dir.parent
+    os.chdir(project_root)
     
     print_status("Initializing AI Summarization Platform...")
     
